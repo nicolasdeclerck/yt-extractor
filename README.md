@@ -19,41 +19,33 @@ pip install yt-dlp
 2. Assurez-vous que yt-dlp est installé sur votre système
 3. Placez le script Python dans votre environnement de travail
 
-## Fonctionnement
-
-Le script effectue les opérations suivantes :
-
-1. Téléchargement des sous-titres de la vidéo YouTube au format VTT
-2. Extraction du texte en supprimant :
-   - Les métadonnées VTT
-   - Les marqueurs de temps
-   - Les balises de formatage
-   - Les doublons de lignes consécutifs
-3. Génération d'un transcript propre et continu
-4. Suppression du fichier VTT temporaire
-
 ## Utilisation
 
-### Utilisation basique
+Lancez simplement le script et suivez les instructions :
 
-```python
-video_url = "https://www.youtube.com/watch?v=XXXXXXXXXXX"
-transcript = process_video_transcript(video_url)
-
-if transcript:
-    print(transcript)
+```bash
+python youtube_transcript.py
 ```
 
-### Spécifier une langue différente
+Le script vous demandera :
 
-```python
-# Pour obtenir les sous-titres en anglais
-transcript = process_video_transcript(video_url, language='en')
-```
+1. L'URL de la vidéo YouTube
+2. Le code de la langue souhaitée (fr, en, es, etc.)
+
+À la fin de l'exécution, un fichier contenant le transcript sera créé dans le répertoire courant avec le nom `transcript_[langue].txt` (par exemple : `transcript_fr.txt`).
 
 ## Structure du code
 
-Le script est composé de trois fonctions principales :
+Le script est composé de quatre fonctions principales :
+
+### main()
+
+Fonction principale qui :
+
+- Gère l'interface utilisateur
+- Collecte les entrées utilisateur (URL et langue)
+- Orchestre le processus d'extraction
+- Sauvegarde le résultat dans un fichier
 
 ### download_subtitles(video_url, language)
 
@@ -74,40 +66,23 @@ Cette fonction traite le fichier VTT pour en extraire le texte propre. Elle :
 
 ### process_video_transcript(video_url, language)
 
-C'est la fonction principale qui :
+Cette fonction :
 
 - Orchestre le processus complet
 - Gère les erreurs potentielles
 - Nettoie les fichiers temporaires
 - Retourne le transcript final
 
-## Options de sortie
-
-Le script propose deux options de sortie :
-
-1. Affichage console :
-
-```python
-print(transcript)
-```
-
-2. Sauvegarde dans un fichier :
-
-```python
-with open('transcript.txt', 'w', encoding='utf-8') as f:
-    f.write(transcript)
-```
-
 ## Gestion des erreurs
 
-Le script inclut une gestion robuste des erreurs pour :
+Le script gère les erreurs suivantes :
 
-- Les échecs de téléchargement de sous-titres
-- Les problèmes de lecture de fichier
-- Les erreurs de traitement du contenu
-- Les problèmes d'encodage
+- Échec du téléchargement des sous-titres
+- Problèmes de lecture de fichier
+- Erreurs de traitement du contenu
+- Problèmes d'encodage
 
-Chaque erreur est capturée et génère un message explicatif approprié.
+En cas d'erreur, un message explicatif est affiché à l'utilisateur.
 
 ## Limitations
 
@@ -117,45 +92,18 @@ Chaque erreur est capturée et génère un message explicatif approprié.
    - Dépend de l'installation correcte de yt-dlp
 
 2. Limitations liées à YouTube :
-
    - Dépend de la disponibilité des sous-titres
    - Qualité limitée par les sous-titres d'origine
 
-3. Limitations techniques :
-   - Traite uniquement le format VTT
-   - Ne gère pas les sous-titres intégrés à la vidéo
-
 ## Support des langues
 
-Le script supporte toutes les langues disponibles sur YouTube. Pour spécifier une langue :
+Le script supporte toutes les langues disponibles sur YouTube. Utilisez les codes de langue ISO standard à deux lettres :
 
 - Français : 'fr'
 - Anglais : 'en'
 - Espagnol : 'es'
 - Allemand : 'de'
 - etc.
-
-Utilisez les codes de langue ISO standard à deux lettres.
-
-## Bonnes pratiques
-
-1. Toujours vérifier le retour de la fonction principale :
-
-```python
-transcript = process_video_transcript(video_url)
-if transcript is None:
-    print("Une erreur est survenue")
-```
-
-2. Gérer les fichiers temporaires :
-
-- Le script nettoie automatiquement les fichiers VTT
-- Vérifier régulièrement qu'aucun fichier temporaire ne reste
-
-3. Respect des limites d'utilisation :
-
-- Éviter les requêtes massives vers YouTube
-- Respecter les conditions d'utilisation de la plateforme
 
 ## Contribution
 
@@ -171,7 +119,7 @@ Les contributions sont les bienvenues :
 
 MIT License
 
-Copyright (c) 2025 Nicolas Declerck
+Copyright (c) [année] [votre nom]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -190,4 +138,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-# yt-extractor
