@@ -6,39 +6,34 @@ def download_subtitles(video_url, language='fr'):
     Télécharge les sous-titres d'une vidéo YouTube en utilisant yt-dlp
     """
     try:
-        # Configuration de la commande yt-dlp
         command = [
             'yt-dlp',
-            '--skip-download',  # Ne pas télécharger la vidéo
-            '--sub-lang', language,  # Langue des sous-titres
-            '--write-auto-sub',  # Télécharger les sous-titres auto-générés si nécessaire
+            '--skip-download',
+            '--sub-lang', language,
+            '--write-auto-sub',
+            '--convert-subs', 'vtt',
             video_url
         ]
         
-        # Exécution de la commande
         result = subprocess.run(command, capture_output=True, text=True)
         
-        # Vérification si la commande a réussi
         if result.returncode != 0:
             print("Erreur lors du téléchargement des sous-titres:")
             print(result.stderr)
             return None
             
-        # Recherche du fichier VTT généré
-        # yt-dlp génère généralement un fichier avec un pattern spécifique
         vtt_files = [f for f in os.listdir('.') if f.endswith('.vtt')]
         if not vtt_files:
             print("Aucun fichier VTT trouvé")
             return None
             
-        return vtt_files[0]  # Retourne le nom du fichier VTT
+        return vtt_files[0]
         
     except Exception as e:
         print(f"Une erreur est survenue: {str(e)}")
         return None
 
 def extract_transcript_from_vtt(vtt_content):
-    # La fonction précédente d'extraction du transcript
     lines = vtt_content.split('\n')
     transcript_lines = []
     previous_line = None
@@ -73,38 +68,50 @@ def process_video_transcript(video_url, language='fr'):
     """
     Fonction principale qui combine le téléchargement et l'extraction
     """
-    # Téléchargement des sous-titres
     vtt_filename = download_subtitles(video_url, language)
     
     if not vtt_filename:
         return None
         
     try:
-        # Lecture du fichier VTT
         with open(vtt_filename, 'r', encoding='utf-8') as file:
             vtt_content = file.read()
         
-        # Extraction du transcript
         transcript = extract_transcript_from_vtt(vtt_content)
         
-        # Nettoyage : suppression du fichier VTT
         os.remove(vtt_filename)
         
         return transcript
         
     except Exception as e:
         print(f"Erreur lors du traitement du fichier VTT: {str(e)}")
+        if os.path.exists(vtt_filename):
+            os.remove(vtt_filename)
         return None
 
-# Exemple d'utilisation
-if __name__ == "__main__":
-    video_url = "https://www.youtube.com/watch?v=aPLpx0HrNmY"  # Remplace par l'URL de ta vidéo
-    transcript = process_video_transcript(video_url)
+def main():
+    # Demande de l'URL à l'utilisateur
+    print("Veuillez entrer l'URL de la vidéo YouTube :")
+    video_url = input().strip()
+    
+    # Demande de la langue à l'utilisateur
+    print("Veuillez entrer le code de la langue souhaitée (fr, en, es, etc.) :")
+    language = input().strip()
+    
+    # Traitement
+    transcript = process_video_transcript(video_url, language)
     
     if transcript:
-        print("Transcript extrait :")
-        print(transcript)
+        # Création du nom de fichier de sortie
+        output_filename = f"transcript_{language}.txt"
         
-        # Optionnel : sauvegarder dans un fichier texte
-        with open('transcript.txt', 'w', encoding='utf-8') as f:
+        # Sauvegarde dans un fichier
+        with open(output_filename, 'w', encoding='utf-8') as f:
             f.write(transcript)
+        
+        print(f"\nLe transcript a été sauvegardé dans le fichier : {output_filename}")
+    else:
+        print("\nUne erreur s'est produite lors de l'extraction du transcript.")
+
+if __name__ == "__main__":
+    main()
