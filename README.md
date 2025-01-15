@@ -24,7 +24,7 @@ pip install yt-dlp
 Lancez simplement le script et suivez les instructions :
 
 ```bash
-python extract_transcript.py
+python extract-transcript.py
 ```
 
 Le script vous demandera :
