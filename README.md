@@ -24,7 +24,7 @@ pip install yt-dlp
 Lancez simplement le script et suivez les instructions :
 
 ```bash
-python youtube_transcript.py
+python extract_transcript.py
 ```
 
 Le script vous demandera :
